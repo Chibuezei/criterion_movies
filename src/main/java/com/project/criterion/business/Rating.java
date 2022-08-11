@@ -15,9 +15,14 @@ import javax.persistence.Table;
 @Table(name = "rating")
 public class Rating {
     @Id
-    private Integer mId;
+    private Long mId;
     private Integer imdb;
     private Integer rottenTomatometer;
     private Integer rottenAudience;
 
+    public Rating(Integer imdb, Integer rottenTomatometer, Integer rottenAudience) {
+        this.imdb = imdb;
+        this.rottenTomatometer = rottenTomatometer;
+        this.rottenAudience = rottenAudience;
+    }
 }

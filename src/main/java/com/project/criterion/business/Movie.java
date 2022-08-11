@@ -14,8 +14,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "movie")
 @NamedQuery(name = "Movie.findByTitle", query = "select u from Movie u where lower(u.title) LIKE '%' || ?1 || '%' order by u.releaseYear desc")
-//@NamedQuery(name = "Recipe.findByUser", query = "select u from Recipe u where lower(u.user) LIKE '%' || ?1 || '%' order by u.date desc")
-
 public class Movie {
     @Id
     @JsonIgnore
@@ -30,4 +28,12 @@ public class Movie {
     private String summary;
 
 
+    public Movie(String title, Integer genre, String releaseYear, Integer duration, boolean edited, String summary) {
+        this.title = title;
+        this.genre = genre;
+        this.releaseYear = releaseYear;
+        this.duration = duration;
+        this.edited = edited;
+        this.summary = summary;
+    }
 }
