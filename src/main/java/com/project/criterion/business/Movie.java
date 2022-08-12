@@ -24,7 +24,7 @@ public class Movie {
     private String releaseYear;
     @Column(name = "duration_mins")
     private Integer duration;
-    private boolean edited;
+    private Boolean edited;
     private String summary;
 
 

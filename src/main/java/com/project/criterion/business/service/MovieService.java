@@ -11,6 +11,7 @@ import com.project.criterion.persistence.RatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,8 +29,10 @@ public class MovieService {
     @Autowired
     InternalRepository internalRepository;
 
-
+    private static final String DATE_FORMATTER = "yyyy-MM-dd HH:mm:ss";
+    @Transactional
     public Long save(Movie movie1, Cast cast, Rating rating, Integer harddrive) {
+        System.out.println("before save");
         Movie movie = movieRepository.save(movie1);
         cast.setMId(movie.getMId());
         castRepository.save(cast);
@@ -37,6 +40,8 @@ public class MovieService {
         ratingRepository.save(rating);
         Internal internal = new Internal(movie.getMId(), harddrive);
         internalRepository.save(internal);
+        System.out.println("after save");
+
         return movie.getMId();
     }
 
@@ -52,7 +57,7 @@ public class MovieService {
         return movieRepository.findMovieBymId(mId);
     }
 
-    public List<Movie> findByGenre(Integer genre) {
+    public List<Movie> findByGenre(String genre) {
         return movieRepository.findByGenre(genre);
     }
 
@@ -60,4 +65,17 @@ public class MovieService {
         return movieRepository.findByReleaseYear(year);
     }
 
+    public List<Movie> findByGenreAndReleaseYear(String genre, String releaseYear) {
+        return movieRepository.findByGenreAndReleaseYear(genre, releaseYear);
+    }
+
+    /**
+     * This method is used to get the movie cast and rating from their
+     * respective repositories.
+     */
+    private List<MovieDTO> getMovieProperties(Movie movie) {
+        MovieDTO movieDTO = new MovieDTO();
+
+        return null;
+    }
 }

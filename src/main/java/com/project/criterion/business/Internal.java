@@ -17,6 +17,7 @@ public class Internal {
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "m_id")
     private Long movieId;
     private Integer HDD;
 

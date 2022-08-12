@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository  extends JpaRepository<Movie, Integer> {
-//    @Query(nativeQuery = true, value = "SELECT * FROM movie order by m_id desc")
-    @Query(nativeQuery = true, value = "SELECT * FROM movie order by m_id desc limit 20")
+    @Query(nativeQuery = true, value = "SELECT * FROM movie order by m_id desc")
+//    @Query(nativeQuery = true, value = "SELECT * FROM movie order by m_id desc limit 20")
     List<Movie> findLatest();
 
     @Query(nativeQuery = true, value = "SELECT * FROM movie where m_id in (select m_id from cast where a_id in " +
@@ -19,9 +19,12 @@ public interface MovieRepository  extends JpaRepository<Movie, Integer> {
 
     List<Movie> findByTitle(String title);
 
-    Movie findMovieBymId(Integer mId);
-    List<Movie> findByGenre(Integer genre);
+    Movie findMovieBymId(Integer mId);//i have forgotten why this is here,
+    @Query(nativeQuery = true, value = "SELECT * FROM movie where genre in (select id from genre where name LIKE '%' || ?1 || '%' ) ")
+    List<Movie> findByGenre(String genre);
     List<Movie> findByReleaseYear(String year);
+    @Query(nativeQuery = true, value = "SELECT * FROM movie where release_year = ?2 and genre in (select id from genre where name LIKE '%' || ?1 || '%' ) ")
+    List<Movie> findByGenreAndReleaseYear(String genre, String releaseYear);
 
 
 }

@@ -15,12 +15,13 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 
+@RestController
 public class MovieApiController {
     @Autowired
     MovieService movieService;
 
     @PostMapping("/api/movie/new")
-    public ResponseEntity<String> addMovie(@Valid Map<String, String> input) {
+    public ResponseEntity<String> addMovie(@RequestBody Map<String, String> input) {
 
         try {
             String title = input.get("title");
@@ -43,35 +44,43 @@ public class MovieApiController {
             Long movieId = movieService.save(movie, cast, rating, hdd);
             return new ResponseEntity<>("{\"id\": " + movieId + "}", HttpStatus.OK);
 
-        } catch (InputMismatchException e) {
+        } catch (InputMismatchException | NumberFormatException d) {
             return new ResponseEntity<>("incorrect parameters", HttpStatus.BAD_REQUEST);
 
         }
     }
 
-    @GetMapping("/api/movie/")
+    @GetMapping("/api/movie")
     public List<Movie> getMovie(@RequestParam(value = "title") String title) {
-        if (movieService.findByTitle(title) == null) {
+        List<Movie> movies = movieService.findByTitle(title);
+        if (movies == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } else {
-            return movieService.findByTitle(title);
+            return movies;
         }
     }
 
 
-    //@PutMapping("/api/movie/{id}") hibernate already does update for existing ids
-    @GetMapping("/api/movie/search/")
-    public List<Movie> getByFilter(@RequestParam(value = "genre", required = false) int genre, @RequestParam(value = "releaseYear", required = false) String releaseYear) {
-        if (releaseYear == null) {
-            return movieService.findByGenre(genre);
+    //@PutMapping("/api/movie/{id}") was not added because hibernate already does update for existing ids
+    @GetMapping("/api/movie/search")
+    public List<Movie> getByFilter(@RequestParam(value = "genre", required = false) String genre, @RequestParam(value = "releaseYear", required = false) String releaseYear) {
+        if (releaseYear != null && genre != null) {
+            return movieService.findByGenreAndReleaseYear(genre,releaseYear);
+        } else if (releaseYear == null) {
+            return movieService.findByGenre(genre.toLowerCase());
         } else {
-            return movieService.findByReleaseYear(releaseYear.toLowerCase());
+            return movieService.findByReleaseYear(releaseYear);
         }
     }
 
     @GetMapping("/api/movie/latest")
     public List<Movie> findLatest() {
         return movieService.findLatest();
+    }
+
+    @GetMapping("/api/movie/{id}") //for test purposes
+    public Movie findMovie(@PathVariable Integer id) {
+        return movieService.findMoviesBymId(id);
     }
 
 }
