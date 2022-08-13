@@ -3,6 +3,7 @@ package com.project.criterion.presentation;
 import com.project.criterion.business.Cast;
 import com.project.criterion.business.Movie;
 import com.project.criterion.business.Rating;
+import com.project.criterion.business.service.MovieDTO;
 import com.project.criterion.business.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,7 +80,7 @@ public class MovieApiController {
     }
 
     @GetMapping("/api/movie/{id}") //for test purposes
-    public Movie findMovie(@PathVariable Integer id) {
+    public MovieDTO findMovie(@PathVariable Long id) {
         return movieService.findMoviesBymId(id);
     }
 

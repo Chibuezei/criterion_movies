@@ -1,18 +1,12 @@
 package com.project.criterion.business.service;
 
-import com.project.criterion.business.Cast;
-import com.project.criterion.business.Internal;
-import com.project.criterion.business.Movie;
-import com.project.criterion.business.Rating;
-import com.project.criterion.persistence.CastRepository;
-import com.project.criterion.persistence.InternalRepository;
-import com.project.criterion.persistence.MovieRepository;
-import com.project.criterion.persistence.RatingRepository;
+import com.project.criterion.business.*;
+import com.project.criterion.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,9 +21,15 @@ public class MovieService {
     RatingRepository ratingRepository;
 
     @Autowired
+    ActorRepository actorRepository;
+    @Autowired
     InternalRepository internalRepository;
 
+    @Autowired
+    GenreRepository genreRepository;
+
     private static final String DATE_FORMATTER = "yyyy-MM-dd HH:mm:ss";
+
     @Transactional
     public Long save(Movie movie1, Cast cast, Rating rating, Integer harddrive) {
         System.out.println("before save");
@@ -53,8 +53,8 @@ public class MovieService {
         return movieRepository.findByTitle(title);
     }
 
-    public Movie findMoviesBymId(Integer mId) {
-        return movieRepository.findMovieBymId(mId);
+    public MovieDTO findMoviesBymId(Long mId) {
+        return getMovieProperties(movieRepository.findMovieBymId(mId));
     }
 
     public List<Movie> findByGenre(String genre) {
@@ -73,9 +73,26 @@ public class MovieService {
      * This method is used to get the movie cast and rating from their
      * respective repositories.
      */
-    private List<MovieDTO> getMovieProperties(Movie movie) {
-        MovieDTO movieDTO = new MovieDTO();
+    private MovieDTO getMovieProperties(Movie movie) {
+        MovieDTO movieDTO = new MovieDTO(movie);
+        movieDTO.setGenre(genreRepository.findByGid(movie.getGenre()).getName());
+        movieDTO.setCast(findActors(castRepository.findByMid(movie.getMId())));
+        System.out.println("here");
+        movieDTO.setRating(90);
 
-        return null;
+        return movieDTO;
+    }
+
+    /**
+     * method to query the actors database to get actor details with their id
+     * @param cast
+     * @return List of Actors
+     */
+    private List<Actor> findActors(Cast cast) {
+        List<Actor> actorList = new ArrayList<>();
+        actorList.add(actorRepository.findByAid(cast.getActor1()));
+        actorList.add(actorRepository.findByAid(cast.getActor2()));
+        actorList.add(actorRepository.findByAid(cast.getActor2()));
+        return actorList;
     }
 }

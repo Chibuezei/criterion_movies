@@ -1,6 +1,9 @@
 package com.project.criterion.business.service;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.criterion.business.Actor;
+import com.project.criterion.business.Cast;
 import com.project.criterion.business.Movie;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,12 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovieDTO {
+    @JsonIgnore
     private Long mId;
     private String title;
-    private Integer genre;
+    private String genre;
     private String releaseYear;
-    private List<String> cast;
-    private List<Integer> rating;
+    private List<Actor> cast;
+    private Integer rating;
     private String duration;
     private Boolean edited;
     private String summary;
@@ -25,7 +29,6 @@ public class MovieDTO {
     public MovieDTO(Movie movie) {
         this.mId = movie.getMId();
         this.title = movie.getTitle();
-        this.genre = movie.getGenre();
         this.releaseYear = movie.getReleaseYear();
         this.duration = timeConverter(movie.getDuration());
         this.edited = movie.getEdited();

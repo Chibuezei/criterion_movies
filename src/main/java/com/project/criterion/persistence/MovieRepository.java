@@ -19,7 +19,7 @@ public interface MovieRepository  extends JpaRepository<Movie, Integer> {
 
     List<Movie> findByTitle(String title);
 
-    Movie findMovieBymId(Integer mId);//i have forgotten why this is here,
+    Movie findMovieBymId(Long mId);//i have forgotten why this is here,
     @Query(nativeQuery = true, value = "SELECT * FROM movie where genre in (select id from genre where name LIKE '%' || ?1 || '%' ) ")
     List<Movie> findByGenre(String genre);
     List<Movie> findByReleaseYear(String year);

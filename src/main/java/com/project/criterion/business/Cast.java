@@ -1,5 +1,6 @@
 package com.project.criterion.business;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 @Table(name = "cast")
 public class Cast {
     @Id
+    @JsonIgnore
     private Long mId;
 
     @Column(name = "actor1")
