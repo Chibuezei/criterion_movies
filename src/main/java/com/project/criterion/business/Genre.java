@@ -17,4 +17,9 @@ public class Genre {
     @Id
     private Integer id;
     private String name;
+
+    public String getName() {
+
+        return name;
+    }
 }

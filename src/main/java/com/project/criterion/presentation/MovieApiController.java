@@ -1,8 +1,6 @@
 package com.project.criterion.presentation;
 
-import com.project.criterion.business.Cast;
-import com.project.criterion.business.Movie;
-import com.project.criterion.business.Rating;
+import com.project.criterion.business.*;
 import com.project.criterion.business.service.MovieDTO;
 import com.project.criterion.business.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +50,8 @@ public class MovieApiController {
     }
 
     @GetMapping("/api/movie")
-    public List<Movie> getMovie(@RequestParam(value = "title") String title) {
-        List<Movie> movies = movieService.findByTitle(title);
+    public List<MovieDTO> getMovie(@RequestParam(value = "title") String title) {
+        List<MovieDTO> movies = movieService.findByTitle(title);
         if (movies == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } else {
@@ -64,7 +62,7 @@ public class MovieApiController {
 
     //@PutMapping("/api/movie/{id}") was not added because hibernate already does update for existing ids
     @GetMapping("/api/movie/search")
-    public List<Movie> getByFilter(@RequestParam(value = "genre", required = false) String genre, @RequestParam(value = "releaseYear", required = false) String releaseYear) {
+    public List<MovieDTO> getByFilter(@RequestParam(value = "genre", required = false) String genre, @RequestParam(value = "releaseYear", required = false) String releaseYear) {
         if (releaseYear != null && genre != null) {
             return movieService.findByGenreAndReleaseYear(genre,releaseYear);
         } else if (releaseYear == null) {
@@ -75,7 +73,7 @@ public class MovieApiController {
     }
 
     @GetMapping("/api/movie/latest")
-    public List<Movie> findLatest() {
+    public List<MovieDTO> findLatest() {
         return movieService.findLatest();
     }
 
@@ -83,5 +81,21 @@ public class MovieApiController {
     public MovieDTO findMovie(@PathVariable Long id) {
         return movieService.findMoviesBymId(id);
     }
+
+    @GetMapping("/api/genre")
+    public List<Genre> getAllGenres () {
+        return movieService.getAllGenres();
+    }
+    @GetMapping("/api/actor")
+    public List<Actor> searchForActors (@RequestParam(value = "name", required = false) String name) {
+        return movieService.getAllActors(name.toLowerCase());
+    }
+
+    @PostMapping("/api/actor")
+    public ResponseEntity<String> postActor (@RequestBody Actor actor){
+        String actorId = movieService.saveActor(actor).toString();
+        return new ResponseEntity<>("{\"id\": " + actorId + "}", HttpStatus.OK);
+    }
+
 
 }

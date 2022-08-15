@@ -3,13 +3,14 @@ package com.project.criterion.business.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.criterion.business.Actor;
-import com.project.criterion.business.Cast;
 import com.project.criterion.business.Movie;
+import com.project.criterion.business.Rating;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +22,7 @@ public class MovieDTO {
     private String genre;
     private String releaseYear;
     private List<Actor> cast;
-    private Integer rating;
+    private Optional<Rating> rating;
     private String duration;
     private Boolean edited;
     private String summary;
@@ -36,8 +37,12 @@ public class MovieDTO {
     }
 
     private String timeConverter(Integer mins) {
-        int hours = mins / 60;
-        int minutes = mins % 60;
-        return String.format("%d hours:%02d minutes", hours, minutes);
+        if (mins == null) {
+            return null; //this conditional was added because there are some movies without duration
+        } else {
+            Integer hours = mins / 60;
+            Integer minutes = mins % 60;
+            return String.format("%d hours:%02d minutes", hours, minutes);
+        }
     }
 }

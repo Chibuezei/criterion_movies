@@ -45,46 +45,64 @@ public class MovieService {
         return movie.getMId();
     }
 
-    public List<Movie> findLatest() {
-        return movieRepository.findLatest();
+    public List<MovieDTO> findLatest() {
+
+        return getMovieProperties(movieRepository.findLatest());
     }
 
-    public List<Movie> findByTitle(String title) {
-        return movieRepository.findByTitle(title);
+    public List<MovieDTO> findByTitle(String title) {
+        return getMovieProperties(movieRepository.findByTitle(title));
     }
 
     public MovieDTO findMoviesBymId(Long mId) {
         return getMovieProperties(movieRepository.findMovieBymId(mId));
     }
 
-    public List<Movie> findByGenre(String genre) {
-        return movieRepository.findByGenre(genre);
+    public List<MovieDTO> findByGenre(String genre) {
+        return getMovieProperties(movieRepository.findByGenre(genre));
     }
 
-    public List<Movie> findByReleaseYear(String year) {
-        return movieRepository.findByReleaseYear(year);
+    public List<MovieDTO> findByReleaseYear(String year) {
+        return getMovieProperties(movieRepository.findByReleaseYear(year));
     }
 
-    public List<Movie> findByGenreAndReleaseYear(String genre, String releaseYear) {
-        return movieRepository.findByGenreAndReleaseYear(genre, releaseYear);
+    public List<MovieDTO> findByGenreAndReleaseYear(String genre, String releaseYear) {
+        return getMovieProperties(movieRepository.findByGenreAndReleaseYear(genre, releaseYear));
     }
 
     /**
      * This method is used to get the movie cast and rating from their
      * respective repositories.
      */
+    private List<MovieDTO> getMovieProperties(List<Movie> movieList) {
+        List<MovieDTO> movieDTOList = new ArrayList<>();
+        for (Movie movie : movieList) {
+            MovieDTO movieDTO = new MovieDTO(movie);
+            movieDTO.setGenre(genreRepository.findByGid(movie.getGenre()).getName());
+            movieDTO.setCast(findActors(castRepository.findByMid(movie.getMId())));
+            movieDTO.setRating(ratingRepository.findById(movieDTO.getMId()));
+            movieDTOList.add(movieDTO);
+        }
+        return movieDTOList;
+    }
+
+    /**
+     * an overloaded method of the method above
+     *
+     * @param movie
+     * @return single MovieDTO
+     */
     private MovieDTO getMovieProperties(Movie movie) {
         MovieDTO movieDTO = new MovieDTO(movie);
         movieDTO.setGenre(genreRepository.findByGid(movie.getGenre()).getName());
         movieDTO.setCast(findActors(castRepository.findByMid(movie.getMId())));
-        System.out.println("here");
-        movieDTO.setRating(90);
-
+        movieDTO.setRating(ratingRepository.findById(movieDTO.getMId()));
         return movieDTO;
     }
 
     /**
-     * method to query the actors database to get actor details with their id
+     * method to query the actors database to get actor details with their a_id
+     *
      * @param cast
      * @return List of Actors
      */
@@ -94,5 +112,18 @@ public class MovieService {
         actorList.add(actorRepository.findByAid(cast.getActor2()));
         actorList.add(actorRepository.findByAid(cast.getActor2()));
         return actorList;
+    }
+
+    public List<Genre> getAllGenres() {
+        return genreRepository.findAll();
+    }
+
+    public List<Actor> getAllActors(String name) {
+        return actorRepository.findByNames(name);
+    }
+
+    public Integer saveActor(Actor actor) {
+        Actor actor1 = actorRepository.save(actor);
+        return actor.getA_id();
     }
 }

@@ -12,6 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "actor")
+@NamedQuery(name = "Actor.findByNames", query = "select u from Actor u where lower(u.firstname) LIKE '%' || ?1 || '%' or lower(u.lastname) LIKE '%' || ?1 || '%' ")
 public class Actor {
     @Id
     @JsonIgnore
@@ -26,5 +27,10 @@ public class Actor {
         this.firstname = firstname;
         this.lastname = lastname;
         this.otherName = otherName;
+    }
+
+    public Actor(String firstname, String lastname) {
+        this.firstname = firstname;
+        this.lastname = lastname;
     }
 }
