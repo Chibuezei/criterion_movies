@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Valid;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
@@ -60,11 +59,10 @@ public class MovieApiController {
     }
 
 
-    //@PutMapping("/api/movie/{id}") was not added because hibernate already does update for existing ids
     @GetMapping("/api/movie/search")
     public List<MovieDTO> getByFilter(@RequestParam(value = "genre", required = false) String genre, @RequestParam(value = "releaseYear", required = false) String releaseYear) {
         if (releaseYear != null && genre != null) {
-            return movieService.findByGenreAndReleaseYear(genre,releaseYear);
+            return movieService.findByGenreAndReleaseYear(genre, releaseYear);
         } else if (releaseYear == null) {
             return movieService.findByGenre(genre.toLowerCase());
         } else {
@@ -83,16 +81,17 @@ public class MovieApiController {
     }
 
     @GetMapping("/api/genre")
-    public List<Genre> getAllGenres () {
+    public List<Genre> getAllGenres() {
         return movieService.getAllGenres();
     }
+
     @GetMapping("/api/actor")
-    public List<Actor> searchForActors (@RequestParam(value = "name", required = false) String name) {
+    public List<Actor> searchForActors(@RequestParam(value = "name") String name) {
         return movieService.getAllActors(name.toLowerCase());
     }
 
     @PostMapping("/api/actor")
-    public ResponseEntity<String> postActor (@RequestBody Actor actor){
+    public ResponseEntity<String> postActor(@RequestBody Actor actor) {
         String actorId = movieService.saveActor(actor).toString();
         return new ResponseEntity<>("{\"id\": " + actorId + "}", HttpStatus.OK);
     }

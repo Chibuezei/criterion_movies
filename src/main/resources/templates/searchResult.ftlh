@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Latest</title>
+        <title>Movies</title>
          <link href="/css/style.css" rel="stylesheet">
     </head>
     <body>
