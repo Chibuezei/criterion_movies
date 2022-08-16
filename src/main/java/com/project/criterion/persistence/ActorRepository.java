@@ -13,9 +13,8 @@ public interface ActorRepository extends JpaRepository<Actor, Integer> {
     @Query(nativeQuery = true, value = "SELECT * FROM actor where a_id = ?1")
     Actor findByAid(Integer aId);
 
-//    @Query(nativeQuery = true, value = "select * from actor where firstname LIKE '%' || ?1 || '%' or lastname LIKE '%' || ?1 || '%' ")
-    @Query(nativeQuery = true, value = "(select * from actor where lower(firstname) LIKE '%' || ?1 || '%')")
-    List<Actor> SearchByName(String name);
+    @Query(nativeQuery = true, value = "select * from actor where firstname LIKE '%' || ?1 || '%' or lastname LIKE '%' || ?1 || '%' ")
+    List<Actor> SearchByName(String name);//for some reasons which i will find out later, jpa was running the wrong query using this method
 
     List<Actor> findByNames(String name);
 }

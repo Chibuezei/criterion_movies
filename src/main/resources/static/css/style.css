@@ -1,0 +1,30 @@
+.titlee{
+    color: darkgreen;
+      width: 500px;
+      height: 50px;
+      border-style: double;
+
+}
+.line2{
+    color: blue;
+
+}
+.line3{
+    color: blue;
+
+}
+.summary{
+    color: darkgreen;
+    border: 2px solid gray;
+    border-style: solid; /* it sets a border */
+}
+h3 {
+
+  border-bottom: 2px solid green;
+  color: darkgreen;
+    width: 500px;
+    height: 50px;
+    text-align: centre;
+
+}
+
